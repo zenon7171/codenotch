@@ -448,6 +448,16 @@ final class SingleProviderRefreshTests: XCTestCase {
 /// that is merely old.
 @MainActor
 final class ExpiredCredentialTests: XCTestCase {
+    func testFailedFirstReadingDoesNotPretendToStillBeLoading() {
+        for error in [UsageProviderError.credentialExpired, .rateLimited(retryAfter: 60)] {
+            let snapshot = ProviderSnapshot(id: "claude", displayName: "Claude", glyph: .claude,
+                fidelity: .official, status: UsageStore.statusForTesting(error), windows: [])
+            XCTAssertTrue(snapshot.statusMessage?.contains("自動で再試行") == true)
+            XCTAssertFalse(snapshot.statusMessage?.contains("最初のデータを取得しています") == true)
+            XCTAssertFalse(snapshot.statusMessage?.contains("サインインしてください") == true)
+        }
+    }
+
     func testAnExpiredTokenAgesTheReadingRatherThanClearingIt() {
         let status = UsageStore.statusForTesting(UsageProviderError.credentialExpired)
         XCTAssertTrue(status.isStale, "an expired token should read as stale, not as an error")

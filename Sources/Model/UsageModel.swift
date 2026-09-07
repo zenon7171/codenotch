@@ -179,7 +179,8 @@ struct ProviderSnapshot: Identifiable, Equatable {
             return "\(displayName) の認証情報へのアクセスが拒否されました。リングをクリックし、「常に許可」を選択してください。"
         case .unsupported(let why): return why
         case .error(let why): return "使用量を取得できませんでした：\(why)"
-        case .stale, .ok:     return "最初のデータを取得しています…"
+        case .stale: return "使用量をまだ取得できていません。連携元の認証情報の更新待ちや、一時的な取得制限の可能性があります。自動で再試行します。"
+        case .ok: return "最初のデータを取得しています…"
         }
     }
 }
