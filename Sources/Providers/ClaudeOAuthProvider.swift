@@ -137,7 +137,7 @@ actor ClaudeOAuthProvider: UsageProvider {
             fidelity: .official,
             status: .ok,
             windows: payload.limitWindows(),
-            headlineID: "session"
+            headlineID: "weekly_all"
         )
     }
 

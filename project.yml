@@ -11,7 +11,7 @@ settings:
     SWIFT_STRICT_CONCURRENCY: minimal
     # Japanese fork version; increment the build number for each distribution.
     MARKETING_VERSION: "1.5.1"
-    CURRENT_PROJECT_VERSION: "10"
+    CURRENT_PROJECT_VERSION: "11"
     # Local Japanese builds use ad-hoc signing; no upstream identity is used.
     CODE_SIGN_IDENTITY: "-"
     CODE_SIGN_STYLE: Manual

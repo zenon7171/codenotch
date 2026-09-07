@@ -81,6 +81,43 @@ final class ClaudeOAuthProviderTests: XCTestCase {
                        "the provider stopped asking after the first failure")
     }
 
+    func testRingUsesWeeklyLimitWhileKeepingFiveHourDetails() async throws {
+        let body = Data("""
+        {"limits":[
+          {"kind":"session","percent":82,"resets_at":"2099-01-01T00:00:00Z"},
+          {"kind":"weekly_all","percent":38,"resets_at":"2099-01-07T00:00:00Z"}
+        ]}
+        """.utf8)
+        StubEndpoint.reset([.init(status: 200, body: body)])
+        let snapshot = try await makeProvider(source: CredentialSource(readable: true)).fetchSnapshot()
+        XCTAssertEqual(snapshot.headlineID, "weekly_all")
+        XCTAssertEqual(snapshot.headlineText, "38%")
+        XCTAssertEqual(snapshot.windows.map(\.id), ["session", "weekly_all"])
+    }
+
+    func testMissingWeeklyLimitDoesNotDisplayFiveHourPercentage() async throws {
+        StubEndpoint.reset([.init(status: 200, body: Self.usagePayload)])
+        let snapshot = try await makeProvider(source: CredentialSource(readable: true)).fetchSnapshot()
+        XCTAssertEqual(snapshot.headlineText, "—")
+        XCTAssertEqual(snapshot.windows.first?.usedFraction, 0.42)
+    }
+
+    func testOldClaudeArchivesUseWeeklyLimitBeforeFetching() {
+        let name = "ClaudeWeeklyArchiveTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: name)!
+        defer { defaults.removePersistentDomain(forName: name) }
+        let archive = UsageArchive(defaults: defaults)
+        for id in ["claude", "claude-work"] {
+            let old = ProviderSnapshot(id: id, displayName: "Claude", glyph: .claude,
+                fidelity: .official, status: .ok, windows: [
+                    LimitWindow(id: "session", label: "5時間", usedFraction: 0.82),
+                    LimitWindow(id: "weekly_all", label: "週間", usedFraction: 0.38)
+                ], headlineID: "session")
+            archive.save([id: (snapshot: old, fetchedAt: Date())])
+            XCTAssertEqual(archive.load()[id]?.snapshot.headlineText, "38%")
+        }
+    }
+
     // MARK: - Helpers
 
     private static let usagePayload = Data("""

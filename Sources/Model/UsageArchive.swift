@@ -80,7 +80,9 @@ struct UsageArchive {
                 fidelity: entry.fidelity,
                 status: .stale(since: entry.fetchedAt),
                 windows: entry.windows,
-                headlineID: entry.headlineID
+                // Older Claude archives selected the five-hour window. Apply the
+                // weekly preference before the next network request succeeds.
+                headlineID: ClaudeProfile.isClaude(providerID: entry.id) ? "weekly_all" : entry.headlineID
             )
             result[entry.id] = (snapshot, entry.fetchedAt)
         }

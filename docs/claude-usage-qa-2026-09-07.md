@@ -15,3 +15,10 @@
 - 認証期限・レート制限の双方で誤った取得中表示やサインイン要求に戻らない回帰テストを追加。
 - make test: 563 tests、失敗0。
 - 1.5.1 build 10を /Applications/Codenotch 日本語版.app に配置し、署名整合性と起動を確認。配布ZIPも更新。
+
+## 週間使用量のリング表示（build 11）
+
+- ユーザー指定によりClaudeOAuthProviderのheadlineIDをsessionからweekly_allへ変更。リングの割合は全モデル合計の週間制限に固定する。詳細の5時間制限・週間制限は保持する。
+- 既存アーカイブもClaude全プロフィールでweekly_allに移行し、起動直後や通信失敗時に旧表示へ戻らないようにした。週間データが欠ける場合、5時間の割合を代用せずダッシュ表示にする。
+- 回帰テスト3件追加。make test: 566 tests、失敗0。
+- /Applications/Codenotch 日本語版.appをbuild 11に更新。実アプリのアクセシビリティで更新前「0% 53%」、更新後「38% 53%」を確認（左Claude、右Codex）。署名整合性確認済み、配布ZIPも更新。

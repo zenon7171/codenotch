@@ -116,17 +116,9 @@ struct ProviderSnapshot: Identifiable, Equatable {
     /// windows: it is not a measurement, it is a door being shut.
     var block: UsageBlock?
 
-    /// The number on the cell: the provider's declared primary window — for
-    /// Claude, the current session.
-    ///
-    /// Not the most-constrained window, which is what the design spec asks for.
-    /// Picking whichever limit is highest means the headline silently changes
-    /// meaning — session one minute, weekly the next — and disagrees with
-    /// Claude's own panel, which always leads with the session.
-    ///
-    /// If the declared window is missing from the response the cell shows no
-    /// reading rather than promoting a different one. A blank is honest; a
-    /// weekly percentage wearing the session's place is not.
+    /// The number on the cell: the provider's declared primary window.
+    /// Claude uses the weekly limit across all models. A missing primary
+    /// window stays blank rather than silently switching the ring's meaning.
     var headline: LimitWindow? {
         guard let headlineID else { return windows.first }
         return windows.first { $0.id == headlineID }
