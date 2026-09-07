@@ -54,6 +54,7 @@ private struct TooltipShell<Content: View>: View {
     let height: CGFloat
     /// Which side of the notch the card is on, so the tail goes on the other one.
     let direction: NotchEdge.TooltipDirection
+    var tailOffset: CGFloat = 0
     @ViewBuilder let content: Content
 
     private var card: some View {
@@ -88,6 +89,7 @@ private struct TooltipShell<Content: View>: View {
         return TooltipTail(direction: direction)
             .fill(Palette.card)
             .frame(width: size.width, height: size.height)
+            .offset(y: tailOffset)
     }
 
     var body: some View {
@@ -430,6 +432,7 @@ struct TooltipCard: View {
     let now: Date
     /// Which way the card sits from the notch, which follows from the edge.
     var direction: NotchEdge.TooltipDirection = .leading
+    var tailOffset: CGFloat = 0
     /// How many sessions this screen has room to list. Solved from the display
     /// rather than fixed, so a big screen hides nothing.
     var sessionCap: Int = NotchLayout.defaultSessionCap
@@ -447,7 +450,7 @@ struct TooltipCard: View {
     }
 
     var body: some View {
-        TooltipShell(height: height, direction: direction) {
+        TooltipShell(height: height, direction: direction, tailOffset: tailOffset) {
             // Stacked, not replaced in place: during a swap both sets of rows
             // exist for a moment, and in a ZStack they overlap and dissolve
             // instead of shoving each other around. Top-aligned so neither

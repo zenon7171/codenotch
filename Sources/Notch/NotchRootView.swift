@@ -43,6 +43,7 @@ struct NotchRootView: View {
                         activity: model.activity(for: snapshot.id),
                         now: model.now,
                         direction: model.edge.tooltipDirection,
+                        tailOffset: model.tooltipTailOffset(index: index),
                         sessionCap: model.sessionCap
                     )
                         // Deliberately *no* `.id` here: the card is one object
@@ -196,7 +197,7 @@ struct NotchRootView: View {
                 blockMessage: snapshot.block?.summary(now: model.now)
             )
         return place.point(
-            along: model.slack + model.ringCenter(index: index),
+            along: model.tooltipCenterAlong(index: index),
             across: model.tooltipInset + (NotchLayout.tailLength + card) / 2
         )
     }

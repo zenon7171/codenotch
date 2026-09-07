@@ -171,7 +171,7 @@ final class NotchWindowController {
         // generous band, because both are small targets on a screen edge.
         let length = max(model.restingLength, NotchLayout.pillHotZone)
         return placement.rect(
-            along: model.slack + (model.shapeLength - length) / 2,
+            along: model.notchLeadingInset + (model.notchLength - length) / 2,
             across: 0,
             length: length,
             depth: model.restingDepth + NotchLayout.pillHotZone
@@ -223,7 +223,7 @@ final class NotchWindowController {
         // pointer has to cross. Along it, the card's own extent.
         let cardAcross = model.edge.isVertical ? NotchLayout.cardWidth : cardHeight
         let cardAlong = model.edge.isVertical ? cardHeight : NotchLayout.cardWidth
-        let centre = model.slack + model.ringCenter(index: index)
+        let centre = model.tooltipCenterAlong(index: index)
         return placement.rect(
             along: centre - cardAlong / 2,
             across: model.contentInset + NotchLayout.bodyDepth(for: model.edge),
@@ -542,7 +542,7 @@ final class NotchWindowController {
     private func cellIndex(along: CGFloat) -> Int? {
         let pitch = NotchLayout.cellPitch(for: model.edge)
         for index in model.snapshots.indices {
-            let centre = model.slack + model.ringCenter(index: index)
+            let centre = model.tooltipCenterAlong(index: index)
             if abs(along - centre) <= pitch / 2 { return index }
         }
         return nil

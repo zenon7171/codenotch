@@ -44,8 +44,8 @@ final class CornerPlacementTests: XCTestCase {
 
     @MainActor
     func testCornerTooltipBudgetExcludesSystemChrome() {
-        let screen = Screen(frameValue: CGRect(x: 0, y: 0, width: 1800, height: 1440),
-                            visibleFrameValue: CGRect(x: 0, y: 100, width: 1800, height: 1300))
+        let screen = Screen(frameValue: CGRect(x: 0, y: 0, width: 1800, height: 1100),
+                            visibleFrameValue: CGRect(x: 0, y: 100, width: 1800, height: 960))
         for edge in corners {
             let model = NotchViewModel()
             model.edge = edge
@@ -65,4 +65,51 @@ final class CornerPlacementTests: XCTestCase {
             XCTAssertEqual(Preferences(defaults: defaults).notchEdge, edge)
         }
     }
+    @MainActor
+    func testVisibleBodyNotTransparentPanelIsPinnedToCorner() {
+        let screen = Screen(frameValue: CGRect(x: 0, y: 0, width: 1800, height: 1440),
+                            visibleFrameValue: CGRect(x: 0, y: 80, width: 1800, height: 1320))
+        for edge in corners {
+            let model = NotchViewModel()
+            model.edge = edge
+            model.snapshots = Array(Fixtures.snapshots().prefix(2))
+            model.adopt(screen: screen)
+            model.isExpanded = true
+            let top = edge == .topRight || edge == .topLeft
+            if top {
+                XCTAssertEqual(model.notchLeadingInset, 0)
+            } else {
+                XCTAssertEqual(model.slack + model.shapeLength + model.cornerHandleClearance,
+                               model.panelSize.height, accuracy: 0.001)
+            }
+            model.isExpanded = false
+            if top {
+                XCTAssertEqual(model.notchLeadingInset, 0)
+            } else {
+                XCTAssertEqual(model.notchLeadingInset + model.notchLength,
+                               model.panelSize.height, accuracy: 0.001)
+            }
+        }
+    }
+
+    @MainActor
+    func testCornerCardsFitAndTheirTailsStillPointToTheHoveredRing() {
+        let screen = Screen(frameValue: CGRect(x: 0, y: 0, width: 1800, height: 1100),
+                            visibleFrameValue: CGRect(x: 0, y: 100, width: 1800, height: 960))
+        for edge in corners {
+            let model = NotchViewModel()
+            model.edge = edge
+            model.snapshots = Fixtures.snapshots()
+            model.adopt(screen: screen)
+            for index in model.snapshots.indices {
+                let center = model.tooltipCenterAlong(index: index)
+                let half = model.tooltipHeight(index: index) / 2
+                XCTAssertGreaterThanOrEqual(center - half, 0)
+                XCTAssertLessThanOrEqual(center + half, model.panelSize.height)
+                XCTAssertEqual(center + model.tooltipTailOffset(index: index),
+                               model.slack + model.ringCenter(index: index), accuracy: 0.001)
+            }
+        }
+    }
+
 }

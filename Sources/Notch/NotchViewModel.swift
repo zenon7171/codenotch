@@ -271,7 +271,15 @@ final class NotchViewModel: ObservableObject {
     var slack: CGFloat { slack(cellCount: snapshots.count) }
 
     func slack(cellCount: Int) -> CGFloat {
-        NotchLayout.slack(for: edge, maxCardHeight: maxCardHeight(cellCount: cellCount))
+        if edge.isCorner {
+            switch edge {
+            case .topRight, .topLeft: return 0
+            default:
+                return max(0, panelSize(cellCount: cellCount).height
+                           - shapeLength(cellCount: cellCount) - cornerHandleClearance)
+            }
+        }
+        return NotchLayout.slack(for: edge, maxCardHeight: maxCardHeight(cellCount: cellCount))
     }
 
     /// How many sessions a tooltip may list here before it has to summarise
@@ -296,6 +304,7 @@ final class NotchViewModel: ObservableObject {
     /// first. Along a horizontal edge the card hangs *inward* instead, and what
     /// it competes with is the depth already spent on the notch body and tail.
     private func cardBudget(cellCount: Int) -> CGFloat {
+        if edge.isCorner { return screenUsableSize.height - 2 * NotchLayout.cardCorner }
         if edge.isVertical {
             let height = edge.isCorner ? screenUsableSize.height : screenSize.height
             return height
@@ -341,7 +350,11 @@ final class NotchViewModel: ObservableObject {
     /// Where the notch starts along the stack. Both states share a centre line,
     /// so folding away does not slide the notch along the edge as it shrinks.
     var notchLeadingInset: CGFloat {
-        slack + (shapeLength - notchLength) / 2
+        if edge.isCorner {
+            if edge == .topRight || edge == .topLeft { return 0 }
+            return isExpanded ? slack : panelSize.height - notchLength
+        }
+        return slack + (shapeLength - notchLength) / 2
     }
 
     /// Sized from an explicit count rather than from `snapshots`.
@@ -360,11 +373,41 @@ final class NotchViewModel: ObservableObject {
         let card = maxCardHeight(cellCount: cellCount)
         return NotchPlacement.panelSize(
             edge: edge,
-            length: shapeLength(cellCount: cellCount)
-                + 2 * NotchLayout.slack(for: edge, maxCardHeight: card),
+            length: edge.isCorner
+                ? max(shapeLength(cellCount: cellCount) + cornerHandleClearance,
+                      card + 2 * NotchLayout.cardCorner)
+                : shapeLength(cellCount: cellCount) + 2 * NotchLayout.slack(for: edge, maxCardHeight: card),
             depth: contentInset
                 + NotchLayout.tooltipDepth(for: edge, maxCardHeight: card)
                 + NotchLayout.bodyDepth(for: edge)
         )
     }
+    /// The visible corner anchor includes the settings handle, not tooltip padding.
+    var cornerHandleClearance: CGFloat { NotchLayout.orbHotZone / 2 }
+
+    func tooltipHeight(index: Int) -> CGFloat {
+        guard snapshots.indices.contains(index) else { return 0 }
+        let snapshot = snapshots[index]
+        return NotchLayout.cardHeight(
+            windowCount: snapshot.windows.count,
+            sessionCount: activity(for: snapshot.id)?.sessions.count ?? 0,
+            sessionCap: sessionCap,
+            statusMessage: snapshot.statusMessage,
+            blockMessage: snapshot.block?.summary(now: now))
+    }
+
+    /// The body stays at the corner while its card is shifted inside the screen.
+    func tooltipCenterAlong(index: Int) -> CGFloat {
+        let anchor = slack + ringCenter(index: index)
+        guard edge.isCorner else { return anchor }
+        let half = tooltipHeight(index: index) / 2
+        return min(max(anchor, half + NotchLayout.cardCorner),
+                   max(half + NotchLayout.cardCorner, panelSize.height - half - NotchLayout.cardCorner))
+    }
+
+    func tooltipTailOffset(index: Int) -> CGFloat {
+        guard edge.isCorner else { return 0 }
+        return slack + ringCenter(index: index) - tooltipCenterAlong(index: index)
+    }
+
 }

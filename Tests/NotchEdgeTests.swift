@@ -359,8 +359,8 @@ final class FoldingOnEveryEdgeTests: XCTestCase {
         return model
     }
 
-    func testFoldingKeepsTheCentreLineOnEveryEdge() {
-        for edge in NotchEdge.allCases {
+    func testFoldingKeepsTheCentreLineOnCardinalEdges() {
+        for edge in NotchEdge.allCases.filter { !$0.isCorner } {
             let m = model(cells: 3, edge: edge)
             m.isExpanded = true
             let open = m.notchLeadingInset + m.notchLength / 2
