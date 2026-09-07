@@ -9,9 +9,9 @@ settings:
   base:
     SWIFT_VERSION: "5.0"
     SWIFT_STRICT_CONCURRENCY: minimal
-    # Bundle versions remain aligned with the upstream base release.
-    MARKETING_VERSION: "1.5.0"
-    CURRENT_PROJECT_VERSION: "7"
+    # Japanese fork version; increment the build number for each distribution.
+    MARKETING_VERSION: "1.5.1"
+    CURRENT_PROJECT_VERSION: "8"
     # Local Japanese builds use ad-hoc signing; no upstream identity is used.
     CODE_SIGN_IDENTITY: "-"
     CODE_SIGN_STYLE: Manual

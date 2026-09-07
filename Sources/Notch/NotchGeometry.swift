@@ -70,6 +70,14 @@ enum NotchGeometry {
 
         let origin: CGPoint
         switch edge {
+        case .topRight:
+            origin = CGPoint(x: usable.maxX - width, y: usable.maxY - height)
+        case .bottomRight:
+            origin = CGPoint(x: usable.maxX - width, y: usable.minY)
+        case .topLeft:
+            origin = CGPoint(x: usable.minX, y: usable.maxY - height)
+        case .bottomLeft:
+            origin = CGPoint(x: usable.minX, y: usable.minY)
         case .right:
             origin = CGPoint(x: usable.maxX - width, y: full.midY - height / 2)
         case .left:

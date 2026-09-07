@@ -49,8 +49,8 @@ struct SettingsOrb: View {
 
     static func restingTrim(for edge: NotchEdge) -> ClosedRange<CGFloat> {
         switch edge {
-        case .right:  return 0.75...1.0      // up, round to the right
-        case .left:   return 0.5...0.75      // left, round to up
+        case .right, .topRight, .bottomRight:  return 0.75...1.0      // up, round to the right
+        case .left, .topLeft, .bottomLeft:   return 0.5...0.75      // left, round to up
         case .top:    return 0.5...0.75      // left, round to up
         case .bottom: return 0.25...0.5      // down, round to the left
         }

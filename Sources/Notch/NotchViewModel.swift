@@ -297,7 +297,8 @@ final class NotchViewModel: ObservableObject {
     /// it competes with is the depth already spent on the notch body and tail.
     private func cardBudget(cellCount: Int) -> CGFloat {
         if edge.isVertical {
-            return screenSize.height
+            let height = edge.isCorner ? screenUsableSize.height : screenSize.height
+            return height
                 - shapeLength(cellCount: cellCount)
                 - 2 * NotchLayout.cardCorner
         }

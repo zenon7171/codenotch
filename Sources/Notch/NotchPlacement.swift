@@ -21,8 +21,8 @@ struct NotchPlacement {
     /// A point in panel coordinates.
     func point(along: CGFloat, across: CGFloat) -> CGPoint {
         switch edge {
-        case .right:  return CGPoint(x: panelSize.width - across, y: along)
-        case .left:   return CGPoint(x: across, y: along)
+        case .right, .topRight, .bottomRight:  return CGPoint(x: panelSize.width - across, y: along)
+        case .left, .topLeft, .bottomLeft:   return CGPoint(x: across, y: along)
         case .top:    return CGPoint(x: along, y: across)
         case .bottom: return CGPoint(x: along, y: panelSize.height - across)
         }
@@ -35,10 +35,10 @@ struct NotchPlacement {
     /// is no screen to be on.
     func rect(along: CGFloat, across: CGFloat, length: CGFloat, depth: CGFloat) -> CGRect {
         switch edge {
-        case .right:
+        case .right, .topRight, .bottomRight:
             return CGRect(x: panelSize.width - across - depth, y: along,
                           width: depth, height: length)
-        case .left:
+        case .left, .topLeft, .bottomLeft:
             return CGRect(x: across, y: along, width: depth, height: length)
         case .top:
             return CGRect(x: along, y: across, width: length, height: depth)
@@ -63,8 +63,8 @@ struct NotchPlacement {
     /// And how far in from the bezel.
     func across(of point: CGPoint) -> CGFloat {
         switch edge {
-        case .right:  return panelSize.width - point.x
-        case .left:   return point.x
+        case .right, .topRight, .bottomRight:  return panelSize.width - point.x
+        case .left, .topLeft, .bottomLeft:   return point.x
         case .top:    return point.y
         case .bottom: return panelSize.height - point.y
         }

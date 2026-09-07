@@ -144,8 +144,8 @@ struct NotchRootView: View {
     /// bezel is — the origin everything inside it is measured from.
     private var contentAlignment: Alignment {
         switch model.edge {
-        case .right:  return .topTrailing
-        case .left:   return .topLeading
+        case .right, .topRight, .bottomRight:  return .topTrailing
+        case .left, .topLeft, .bottomLeft:   return .topLeading
         case .top:    return .topLeading
         case .bottom: return .bottomLeading
         }
@@ -154,8 +154,8 @@ struct NotchRootView: View {
     /// Which side of that frame faces the bezel.
     private var bezelSide: Edge.Set {
         switch model.edge {
-        case .right:  return .trailing
-        case .left:   return .leading
+        case .right, .topRight, .bottomRight:  return .trailing
+        case .left, .topLeft, .bottomLeft:   return .leading
         case .top:    return .top
         case .bottom: return .bottom
         }

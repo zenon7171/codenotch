@@ -65,10 +65,10 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
-                Picker("配置する辺", selection: $preferences.notchEdge) {
+                Picker("配置", selection: $preferences.notchEdge) {
                     ForEach(NotchEdge.allCases) { Text($0.title).tag($0) }
                 }
-                .pickerStyle(.segmented)
+                .pickerStyle(.menu)
 
                 Text(preferences.notchEdge.explanation)
                     .font(.caption)

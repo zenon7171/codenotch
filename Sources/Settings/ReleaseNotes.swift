@@ -30,6 +30,10 @@ struct ReleaseNote: Equatable {
 /// `testTheCurrentVersionHasANote`.
 enum ReleaseNotes {
     static let all: [ReleaseNote] = [
+        ReleaseNote(version: "1.5.1", headline: "四隅にも配置できるようになりました", changes: [
+            .init(title: "8か所から配置を選択", detail: "設定の「配置」から、右・左・上・下に加え、右上・右下・左上・左下を選べます。四隅では縦型で表示します。"),
+            .init(title: "画面端での表示を調整", detail: "四隅ではメニューバーや Dock を避け、説明カードが収まる領域に配置します。")
+        ]),
         ReleaseNote(version: "1.5.0", headline: "Codenotch 日本語版", changes: [
             .init(title: "日本語で使用量を確認", detail: "設定、メニュー、使用量、セッションの状態とリセット日時を日本語で表示します。"),
             .init(title: "本家 1.5.0 の機能を継承", detail: "Claude Code、Cursor、Codex、Antigravity、GLM、Grok、OpenCode に対応しています。"),

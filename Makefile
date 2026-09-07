@@ -11,6 +11,7 @@ endif
 PROJECT := Codenotch.xcodeproj
 SCHEME  := Codenotch
 DEST    := platform=macOS,arch=arm64
+DERIVED_DATA := build/DerivedData.noindex
 
 # Debug ad-hoc signs itself when the maintainer's Developer ID certificate
 # isn't in the keychain, which is every machine but the maintainer's — so a
@@ -29,15 +30,15 @@ gen:
 	xcodegen generate
 
 build: gen
-	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
+	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath $(DERIVED_DATA) \
 		-configuration Debug $(DEV_SIGN) build
 
 test: gen
-	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
+	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath $(DERIVED_DATA) \
 		-configuration Debug $(DEV_SIGN) test
 
 run: build
-	@APP=$$(xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
+	@APP=$$(xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath $(DERIVED_DATA) \
 		-configuration Debug -showBuildSettings 2>/dev/null \
 		| awk -F' = ' '/ BUILT_PRODUCTS_DIR/ {print $$2; exit}')/Codenotch.app; \
 	pkill -x Codenotch || true; \
@@ -79,7 +80,7 @@ archive: gen
 	@# release leaves extra "Codenotch" entries in app search next to the
 	@# real one in /Applications. This stops the whole tree being indexed.
 	@touch build/.metadata_never_index
-	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
+	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' -derivedDataPath $(DERIVED_DATA) \
 		-configuration Release -archivePath $(RELEASE_DIR)/$(APP_NAME).xcarchive archive
 	printf '%s\n' \
 		'<?xml version="1.0" encoding="UTF-8"?>' \

@@ -58,9 +58,9 @@ struct SideNotchShape: Shape {
     /// `(along, across)` the same way `NotchPlacement` does.
     static func transform(for edge: NotchEdge, depth: CGFloat) -> CGAffineTransform {
         switch edge {
-        case .right:
+        case .right, .topRight, .bottomRight:
             return .identity
-        case .left:
+        case .left, .topLeft, .bottomLeft:
             // Mirrored: the flares point the other way.
             return CGAffineTransform(a: -1, b: 0, c: 0, d: 1, tx: depth, ty: 0)
         case .top:
