@@ -322,13 +322,13 @@ final class EdgeArrivalTests: XCTestCase {
     }
 }
 
-/// "Always show" is a standing choice, and clicking the notch must not quietly
+/// "常に表示" is a standing choice, and clicking the notch must not quietly
 /// undo it.
 ///
 /// It was held in `isPinned` — the same flag a click on the notch toggles. So
 /// clicking anywhere on the bar that was not a ring or the settings orb turned
 /// the flag off, the notch started folding on the way out, and Settings went on
-/// saying "Always show". Reported as: it sometimes reverts to show-on-hover.
+/// saying "常に表示". Reported as: it sometimes reverts to show-on-hover.
 @MainActor
 final class AlwaysShowTests: XCTestCase {
     func testClickingTheNotchDoesNotUndoAlwaysShow() {

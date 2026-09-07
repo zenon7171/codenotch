@@ -42,16 +42,16 @@ enum CursorUsage {
         // so does this. Suppressing it hid a correct reading from an account
         // that had genuinely just been switched.
         if let total = percent(plan["totalPercentUsed"]) {
-            windows.append(LimitWindow(id: "included", label: "Included usage",
+            windows.append(LimitWindow(id: "included", label: "プラン内の使用量",
                                        usedFraction: total, resetsAt: resetsAt))
         }
         // Reported separately by Cursor, and can be far ahead of the total.
         if let api = percent(plan["apiPercentUsed"]), api > 0 {
-            windows.append(LimitWindow(id: "api", label: "API usage",
+            windows.append(LimitWindow(id: "api", label: "API 使用量",
                                        usedFraction: api, resetsAt: resetsAt))
         }
         if let onDemand = spendWindow(usage["onDemand"], id: "on_demand",
-                                      label: "On demand", resetsAt: resetsAt) {
+                                      label: "従量課金", resetsAt: resetsAt) {
             windows.append(onDemand)
         }
 
@@ -59,7 +59,7 @@ enum CursorUsage {
 
         let membership = (root["membershipType"] as? String) ?? "this"
         if (root["isUnlimited"] as? Bool) == true {
-            throw UsageProviderError.nothingMetered("Unlimited on the \(membership) plan — nothing to meter")
+            throw UsageProviderError.nothingMetered("\(membership) プランは無制限のため、使用量の計測対象がありません")
         }
         throw UsageProviderError.nothingMetered("The \(membership) plan has nothing for Cursor to meter yet")
     }

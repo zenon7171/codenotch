@@ -44,13 +44,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // with its numbers, for screenshots and for eyeballing the layout.
         if ProcessInfo.processInfo.environment["CODENOTCH_DEMO"] == "1" {
             controller.model.snapshots = Fixtures.snapshots()
+            // Demo settings use an isolated domain and never read credentials.
+            let demoDefaults = UserDefaults(suiteName: "com.zenon7171.codenotch.demo")!
+            let preferences = Preferences(defaults: demoDefaults)
+            let updater = Updater()
+            let settings = SettingsWindowController(
+                preferences: preferences,
+                providers: { [] },
+                updater: updater,
+                signOut: { _ in }, signIn: { _ in false },
+                switchAccount: { _ in false }, retry: { _ in }
+            )
+            self.settings = settings
+            controller.onOpenSettings = { [weak settings] in settings?.show() }
+            settings.show()
+
         } else {
             // Nothing needs a browser session at the moment. `WebSessionProvider`
             // and `Sites.perplexity` are kept: they are the working pattern for a
             // site behind bot management, and re-registering is one line.
             let webProviders: [WebSessionProvider] = []
             controller.signInItems = webProviders.map { provider in
-                (title: "Sign in to \(provider.displayName)…",
+                (title: "\(provider.displayName) にサインイン…",
                  action: { [weak provider] in provider?.presentSignIn() })
             }
             // Before Preferences reads anything, or the first launch flag and

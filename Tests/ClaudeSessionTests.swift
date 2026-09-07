@@ -21,7 +21,7 @@ final class ClaudeSessionRecordTests: XCTestCase {
         XCTAssertEqual(s.id, "claude.2678")
         XCTAssertEqual(s.name, "usage-notch-bc")
         XCTAssertEqual(s.state, .busy)
-        XCTAssertEqual(s.detail, "Terminal · usage-notch")
+        XCTAssertEqual(s.detail, "ターミナル · usage-notch")
     }
 
     func testWaitingCarriesWhatItIsWaitingFor() throws {
@@ -64,8 +64,8 @@ final class ClaudeSessionRecordTests: XCTestCase {
             ClaudeSessionRecord.surface(entrypoint)
         }
         XCTAssertEqual(try surface("claude-vscode"), "VS Code")
-        XCTAssertEqual(try surface("claude-desktop"), "Desktop")
-        XCTAssertEqual(try surface("cli"), "Terminal")
+        XCTAssertEqual(try surface("claude-desktop"), "デスクトップ")
+        XCTAssertEqual(try surface("cli"), "ターミナル")
     }
 
     /// `procStart` is a ctime string in UTC. Reading it as local time puts it

@@ -64,7 +64,7 @@ final class SettingsWindowController {
             backing: .buffered,
             defer: false
         )
-        window.title = "Codenotch Settings"
+        window.title = "Codenotch の設定"
         window.contentView = NSHostingView(
             rootView: SettingsView(preferences: preferences,
                                    providers: providers,

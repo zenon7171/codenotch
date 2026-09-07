@@ -199,8 +199,7 @@ actor ClaudeOAuthProvider: UsageProvider {
     nonisolated var signInRoute: SignInRoute {
         // Names the command for a profile, because that is the only way to
         // reach it: plain `claude` signs the default one in, not this.
-        .guidance("Run `\(profile.signInCommand)` once — it signs in and refreshes "
-                  + "the token this reads. Use /login there to change account.")
+        .guidance("「\(profile.signInCommand)」を実行してサインインしてください。アカウントの切り替えは、そのツール内で /login を実行します。")
     }
 
     nonisolated func forgetCachedCredential() { keychain.forgetCached() }
@@ -279,8 +278,8 @@ struct UsageResponse: Decodable {
                                        usedFraction: window.utilization / 100,
                                        resetsAt: resetsAt))
         }
-        merge(fiveHour, id: "session", label: "Current session")
-        merge(sevenDay, id: "weekly_all", label: "All models")
+        merge(fiveHour, id: "session", label: "現在のセッション")
+        merge(sevenDay, id: "weekly_all", label: "すべてのモデル")
 
         return windows.sorted(by: UsageResponse.displayOrder)
     }
@@ -288,8 +287,8 @@ struct UsageResponse: Decodable {
     /// The frame's wording, for the kinds it drew.
     static func label(forKind kind: String) -> String {
         switch kind {
-        case "session":       return "Current session"
-        case "weekly_all":    return "All models"
+        case "session":       return "現在のセッション"
+        case "weekly_all":    return "すべてのモデル"
         case "weekly_opus":   return "Opus"
         case "weekly_sonnet": return "Sonnet"
         default:

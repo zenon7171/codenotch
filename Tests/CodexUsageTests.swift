@@ -18,7 +18,7 @@ final class CodexUsageTests: XCTestCase {
          "credits":{"balance":"100"},"model_usage":{"spark":99}}
         """)
         XCTAssertEqual(result.map(\.id), ["primary", "secondary"])
-        XCTAssertEqual(result.map(\.label), ["5h limit", "Weekly limit"])
+        XCTAssertEqual(result.map(\.label), ["5時間の上限", "週間の上限"])
         XCTAssertEqual(result.map(\.usedFraction), [0.25, 0.10])
         XCTAssertEqual(result.first?.resetsAt, Date(timeIntervalSince1970: 1_800_001_000))
     }
@@ -36,7 +36,7 @@ final class CodexUsageTests: XCTestCase {
          "plan_type":"free"}
         """)
         XCTAssertEqual(result.map(\.id), ["primary"])
-        XCTAssertEqual(result.first?.label, "Monthly limit")
+        XCTAssertEqual(result.first?.label, "月間の上限")
         XCTAssertEqual(result.first?.usedFraction ?? -1, 0.16, accuracy: 0.0001)
     }
 
@@ -46,7 +46,7 @@ final class CodexUsageTests: XCTestCase {
         let result = try windows("""
         {"rate_limit":{"primary_window":{"used_percent":5,"limit_window_seconds":259200}}}
         """)
-        XCTAssertEqual(result.first?.label, "3d limit")
+        XCTAssertEqual(result.first?.label, "3日間の上限")
     }
 
     // The endpoint can put a weekly-only allowance in primary_window.
@@ -56,7 +56,7 @@ final class CodexUsageTests: XCTestCase {
         "reset_after_seconds":604119,"reset_at":1789308033},"secondary_window":null}}
         """)
         XCTAssertEqual(result.map(\.id), ["primary"])
-        XCTAssertEqual(result.first?.label, "Weekly limit")
+        XCTAssertEqual(result.first?.label, "週間の上限")
         XCTAssertEqual(result.first?.resetsAt, Date(timeIntervalSince1970: 1_789_308_033))
     }
 
@@ -201,7 +201,7 @@ final class UsageBlockTests: XCTestCase {
         let now = Date(timeIntervalSince1970: 1_788_000_000)
         let block = UsageBlock(reason: "Paused", resetsAt: now.addingTimeInterval(90 * 60))
         let text = block.summary(now: now)
-        XCTAssertTrue(text.hasPrefix("Paused until "), text)
+        XCTAssertTrue(text.hasPrefix("Paused（") && text.hasSuffix("まで）"), text)
         XCTAssertFalse(text.contains("min"), "a countdown, not the time it lifts")
     }
 

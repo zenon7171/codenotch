@@ -466,19 +466,19 @@ final class ProviderAccountTests: XCTestCase {
         let account = ProviderAccount(
             label: "someone@example.com", plan: "free", source: "Cursor", manageURL: nil
         )
-        XCTAssertEqual(account.summary, "someone@example.com · Free · via Cursor")
+        XCTAssertEqual(account.summary, "someone@example.com · Free · 取得元：Cursor")
     }
 
     /// Claude's credential carries no address, so the row still has to say
     /// something useful rather than collapsing to an empty line.
     func testSummarySurvivesAMissingLabel() {
         let account = ProviderAccount(label: nil, plan: "pro", source: "Claude Code", manageURL: nil)
-        XCTAssertEqual(account.summary, "Pro · via Claude Code")
+        XCTAssertEqual(account.summary, "Pro · 取得元：Claude Code")
     }
 
     func testSummarySurvivesAMissingPlan() {
         let account = ProviderAccount(label: "a@b.c", plan: nil, source: "Codex", manageURL: nil)
-        XCTAssertEqual(account.summary, "a@b.c · via Codex")
+        XCTAssertEqual(account.summary, "a@b.c · 取得元：Codex")
     }
 
     /// The identity lives in the id token's claims. Decoding is base64url with
@@ -619,7 +619,7 @@ final class NotchVisibilityTests: XCTestCase {
     /// Hiding removes every other way back into the app, so the option itself
     /// has to say where the door is.
     func testHidingExplainsHowToGetBack() {
-        XCTAssertTrue(NotchVisibility.hidden.explanation.contains("Applications"))
+        XCTAssertTrue(NotchVisibility.hidden.explanation.contains("アプリケーション"))
     }
 
     func testEveryModeIsOfferedAndNamed() {

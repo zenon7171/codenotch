@@ -18,22 +18,21 @@ enum NotchVisibility: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .alwaysShow: return "Always show"
-        case .onHover:    return "Show on hover"
-        case .hidden:     return "Hide"
+        case .alwaysShow: return "常に表示"
+        case .onHover:    return "ポインタで表示"
+        case .hidden:     return "非表示"
         }
     }
 
     var explanation: String {
         switch self {
         case .alwaysShow:
-            return "The notch stays open with every reading visible."
+            return "ノッチを開いたままにして、すべての使用量を表示します。"
         case .onHover:
-            return "A small pill at the screen edge that opens when you reach it."
+            return "画面の端に小さく表示し、ポインタを重ねると開きます。"
         case .hidden:
             // Said here because a hidden notch is also a hidden way back in.
-            return "Nothing on screen. Open Codenotch again from Applications "
-                 + "to bring these settings back."
+            return "ノッチを表示しません。設定画面を再び開くには「アプリケーション」から Codenotch を起動してください。"
         }
     }
 }

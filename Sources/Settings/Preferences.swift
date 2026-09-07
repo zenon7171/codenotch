@@ -77,7 +77,7 @@ final class Preferences: ObservableObject {
     /// the notch's mode, the archived readings, all apparently lost. Copying
     /// the old domain across once is the difference between a rename and what
     /// looks like a reset.
-    private static let previousDomain = "com.vinz.usagenotch"
+    private static let previousDomain = "com.zenon7171.usagenotch"
 
     static func migrateFromPreviousName(into defaults: UserDefaults = .standard,
                                         from domain: String = previousDomain) {
@@ -144,7 +144,7 @@ final class Preferences: ObservableObject {
     /// update, and wiping data on every Sparkle update would be catastrophic.
     /// It has to be something the user asks for.
     static func eraseAllData() {
-        let bundleID = Bundle.main.bundleIdentifier ?? "com.vinz.codenotch"
+        let bundleID = Bundle.main.bundleIdentifier ?? "com.zenon7171.codenotch"
         UserDefaults.standard.removePersistentDomain(forName: bundleID)
         UserDefaults.standard.synchronize()
 
@@ -178,7 +178,7 @@ final class Preferences: ObservableObject {
             // Commonly refused for an app running from a build directory rather
             // than /Applications, which is worth saying plainly.
             Log.usage.error("launch at login failed: \(error.localizedDescription, privacy: .public)")
-            launchAtLoginProblem = "macOS refused this — try moving Codenotch to /Applications."
+            launchAtLoginProblem = "macOS に拒否されました。Codenotch を「アプリケーション」フォルダに移動して再試行してください。"
             launchAtLogin = Self.isRegisteredForLogin
         }
     }

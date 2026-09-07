@@ -19,22 +19,21 @@ enum AppPresence: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .dock:    return "Dock"
-        case .menuBar: return "Menu bar"
-        case .hidden:  return "Neither"
+        case .menuBar: return "メニューバー"
+        case .hidden:  return "表示しない"
         }
     }
 
     var explanation: String {
         switch self {
         case .dock:
-            return "A normal app icon in the Dock while Codenotch is running."
+            return "Codenotch の起動中は Dock にアプリアイコンを表示します。"
         case .menuBar:
-            return "A small icon in the menu bar instead, and nothing in the Dock."
+            return "メニューバーに小さなアイコンを表示します。Dock には表示しません。"
         case .hidden:
             // Said here because choosing this removes every visible way back to
             // these settings, and finding that out afterwards is too late.
-            return "No icon anywhere. Open Codenotch again from Applications to "
-                 + "bring these settings back."
+            return "アイコンを表示しません。設定画面を再び開くには「アプリケーション」から Codenotch を起動してください。"
         }
     }
 

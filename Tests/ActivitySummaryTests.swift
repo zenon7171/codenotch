@@ -17,7 +17,7 @@ final class ActivitySummaryTests: XCTestCase {
     func testWaitingOutranksWorking() {
         let summary = ActivitySummary(sessions: [session(.busy), session(.waiting), session(.idle)])
         XCTAssertEqual(summary?.state, .waiting)
-        XCTAssertEqual(summary?.label, "waiting")
+        XCTAssertEqual(summary?.label, "応答待ち")
     }
 
     func testWorkingOutranksIdle() {

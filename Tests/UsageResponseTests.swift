@@ -45,9 +45,9 @@ final class UsageResponseTests: XCTestCase {
         let windows = try decode(live).limitWindows()
         XCTAssertEqual(windows.count, 2)
         XCTAssertEqual(windows[0].id, "session")
-        XCTAssertEqual(windows[0].label, "Current session")
+        XCTAssertEqual(windows[0].label, "現在のセッション")
         XCTAssertEqual(windows[0].usedFraction ?? -1, 0.52, accuracy: 0.0001)
-        XCTAssertEqual(windows[1].label, "All models")
+        XCTAssertEqual(windows[1].label, "すべてのモデル")
         XCTAssertEqual(windows[1].usedFraction ?? -1, 0.17, accuracy: 0.0001)
     }
 
@@ -79,7 +79,7 @@ final class UsageResponseTests: XCTestCase {
           "seven_day": { "utilization": 16.0, "resets_at": "2026-09-02T17:00:00.316321+00:00" } }
         """
         let windows = try decode(json).limitWindows()
-        XCTAssertEqual(windows.map(\.label), ["Current session", "All models"])
+        XCTAssertEqual(windows.map(\.label), ["現在のセッション", "すべてのモデル"])
     }
 
     func testUnknownKindsGetAReadableLabel() {
@@ -160,7 +160,7 @@ final class UsageArchiveTests: XCTestCase {
         id: "claude", displayName: "Claude", glyph: .claude,
         fidelity: .official, status: .ok,
         windows: [
-            LimitWindow(id: "session", label: "Current session",
+            LimitWindow(id: "session", label: "現在のセッション",
                         usedFraction: 0.68, resetsAt: Date(timeIntervalSince1970: 1_787_910_000))
         ]
     )
@@ -350,7 +350,7 @@ final class ResetWindowTests: XCTestCase {
         let snapshot = ProviderSnapshot(
             id: "claude", displayName: "Claude", glyph: .claude,
             fidelity: .official, status: .ok,
-            windows: [LimitWindow(id: "weekly_all", label: "All models", usedFraction: 0.33)],
+            windows: [LimitWindow(id: "weekly_all", label: "すべてのモデル", usedFraction: 0.33)],
             headlineID: "session"
         )
         XCTAssertNil(snapshot.headline)
@@ -763,7 +763,7 @@ final class SignInRoutingTests: XCTestCase {
 final class ModalRouteCopyTests: XCTestCase {
     func testTheModalRouteOffersToSignIn() {
         XCTAssertEqual(SignInRoute.modal(name: "Perplexity").actionTitle,
-                       "Sign in to Perplexity")
+                       "Perplexity にサインイン")
     }
 
     func testItDoesNotClaimYouStaySignedIn() {

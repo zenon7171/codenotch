@@ -11,7 +11,7 @@ import SwiftUI
 final class TooltipRenderTests: XCTestCase {
     private func session(_ name: String, _ state: AgentSession.State,
                          minutes: Int) -> AgentSession {
-        AgentSession(id: name, name: name, detail: "Terminal · usage-notch",
+        AgentSession(id: name, name: name, detail: "ターミナル · usage-notch",
                      state: state, waitingFor: state == .waiting ? "your answer" : nil,
                      since: Date().addingTimeInterval(Double(-minutes) * 60))
     }

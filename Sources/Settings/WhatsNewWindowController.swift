@@ -49,7 +49,7 @@ final class WhatsNewWindowController {
             backing: .buffered,
             defer: false
         )
-        window.title = "What's New"
+        window.title = "新機能"
         window.contentView = NSHostingView(
             rootView: WhatsNewView(note: note) { [weak self] in self?.dismiss() }
         )

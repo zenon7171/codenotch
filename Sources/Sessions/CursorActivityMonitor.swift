@@ -180,7 +180,7 @@ final class CursorActivityMonitor: ObservableObject, AgentActivityMonitor {
 
         return AgentSession(
             id: "cursor.\(id)",
-            name: (head["name"] as? String) ?? "Untitled chat",
+            name: (head["name"] as? String) ?? "無題のチャット",
             detail: (head["subtitle"] as? String) ?? "Cursor",
             state: state,
             waitingFor: blocked ? "needs your input" : nil,

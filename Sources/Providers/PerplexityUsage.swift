@@ -24,9 +24,9 @@ enum PerplexityUsage {
     /// The quotas worth a line, in the order they are shown. The first is the
     /// headline, so it is the one people actually run out of.
     private static let counters: [(key: String, label: String)] = [
-        ("remaining_pro", "Pro searches"),
-        ("remaining_research", "Research"),
-        ("remaining_agentic_research", "Agentic research"),
+        ("remaining_pro", "Pro 検索"),
+        ("remaining_research", "リサーチ"),
+        ("remaining_agentic_research", "エージェントによるリサーチ"),
         ("remaining_labs", "Labs")
     ]
 
@@ -51,7 +51,7 @@ enum PerplexityUsage {
            (detail["kind"] as? String) == "exact",
            let remaining = (detail["remaining"] as? NSNumber)?.intValue {
             windows.append(
-                LimitWindow(id: "free_queries", label: "Free queries", remaining: remaining)
+                LimitWindow(id: "free_queries", label: "無料クエリ", remaining: remaining)
             )
         }
 

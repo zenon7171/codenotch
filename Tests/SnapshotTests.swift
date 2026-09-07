@@ -43,7 +43,7 @@ final class SnapshotTests: XCTestCase {
 
     /// A provider that reports only what is left gets a count, not a percentage.
     func testCountOnlyWindowsPrintTheCount() {
-        let s = snapshot([LimitWindow(id: "remaining_pro", label: "Pro searches", remaining: 2)])
+        let s = snapshot([LimitWindow(id: "remaining_pro", label: "Pro 検索", remaining: 2)])
         XCTAssertNil(s.usedFraction)
         XCTAssertNil(s.ringFraction)
         XCTAssertEqual(s.headlineText, "2")

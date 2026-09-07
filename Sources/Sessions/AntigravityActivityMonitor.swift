@@ -89,7 +89,7 @@ final class AntigravityActivityMonitor: AgentActivityMonitor {
         return AgentSession(
             id: "antigravity.\(id)",
             name: "Antigravity",
-            detail: "Working",
+            detail: "作業中",
             state: .busy,
             waitingFor: nil,
             since: modified

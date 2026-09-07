@@ -3,7 +3,7 @@ import XCTest
 
 /// What the settings row is allowed to offer.
 ///
-/// "Allow access…" used to be shown for every keychain-backed provider,
+/// "アクセスを許可…" used to be shown for every keychain-backed provider,
 /// unconditionally. That put a remedy on screen next to a perfectly working
 /// account, and — because the same row looked identical when the remedy *was*
 /// needed — gave no way to tell a button that had nothing to do from one that
@@ -119,7 +119,7 @@ private final class SwitchableProvider: UsageProvider, @unchecked Sendable {
             return ProviderSnapshot(
                 id: id, displayName: displayName, glyph: glyph,
                 fidelity: .official, status: .ok,
-                windows: [LimitWindow(id: "session", label: "Current session",
+                windows: [LimitWindow(id: "session", label: "現在のセッション",
                                       usedFraction: 0.42,
                                       resetsAt: Date().addingTimeInterval(3600))]
             )

@@ -21,7 +21,7 @@ actor GrokLocalProvider: UsageProvider {
     }
 
     nonisolated var signInRoute: SignInRoute {
-        .guidance("Run grok login — it signs in and refreshes the token this reads.")
+        .guidance("「grok login」を実行してサインインすると、使用量の取得に使うトークンが更新されます。")
     }
 
     nonisolated func account() -> ProviderAccount? { GrokCredentials.account() }

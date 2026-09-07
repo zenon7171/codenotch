@@ -1,5 +1,4 @@
 import XCTest
-import Sparkle
 @testable import Codenotch
 
 /// Fixtures are the real thing: the keychain payload's shape and the actual
@@ -177,13 +176,13 @@ final class AntigravityActivityTests: XCTestCase {
     func testTheSummaryNeverImpliesAPercentage() throws {
         try write([step("2026-08-31T09:00:00Z", source: "MODEL")])
         let summary = AntigravityActivity.read(root: root, now: noon).summary
-        XCTAssertEqual(summary, "~1 request today")
+        XCTAssertEqual(summary, "本日 約1件のリクエスト")
         XCTAssertFalse(summary.contains("%"))
     }
 
     func testNoActivityReadsAsNoneRatherThanZeroPercent() {
         XCTAssertEqual(AntigravityActivity(requestsToday: 0, lastRequest: nil).summary,
-                       "no requests today")
+                       "本日のリクエストはありません")
     }
 }
 
@@ -241,7 +240,7 @@ final class AntigravityCountSnapshotTests: XCTestCase {
             id: "gemini", displayName: "Antigravity", glyph: .antigravity,
             fidelity: .derived, status: .ok,
             windows: [LimitWindow(id: "requests",
-                                  label: "Requests today · no limit published",
+                                  label: "本日のリクエスト数 · 上限非公開",
                                   used: count)]
         )
     }
@@ -468,7 +467,7 @@ final class CredentialCacheTests: XCTestCase {
         XCTAssertEqual(reads, 3, "a rotated secret was never fetched")
     }
 
-    /// And "Allow access…" still gets through, because raising the dialogue is
+    /// And "アクセスを許可…" still gets through, because raising the dialogue is
     /// exactly what that button is for.
     func testForgettingClearsARefusalBackoff() {
         struct Denied: Error {}
@@ -597,7 +596,7 @@ final class AccountDestinationTests: XCTestCase {
     /// where it actually goes.
     func testTitlesNameTheirDestination() {
         XCTAssertEqual(SignInRoute.openApp(bundleID: "x", name: "Cursor").actionTitle,
-                       "Open Cursor")
+                       "Cursor を開く")
     }
 
     /// An app that is not installed must not be offered — the button would do
@@ -634,7 +633,7 @@ final class FirstRunCopyTests: XCTestCase {
         for tool in ["Claude Code", "Cursor", "Codex", "Antigravity"] {
             XCTAssertTrue(copy.contains(tool), "the setup note never mentions \(tool)")
         }
-        XCTAssertTrue(copy.contains("not the Claude app"),
+        XCTAssertTrue(copy.contains("ターミナル用ツール"),
                       "nothing warns that the Claude app is not Claude Code")
     }
 
@@ -642,8 +641,8 @@ final class FirstRunCopyTests: XCTestCase {
     /// choosing Allow rather than Always Allow is what makes it recur.
     func testTheKeychainPromptIsExplainedBeforeItAppears() {
         let copy = SettingsView.keychainCopy
-        XCTAssertTrue(copy.contains("Always Allow"))
-        XCTAssertTrue(copy.lowercased().contains("macos will ask"))
+        XCTAssertTrue(copy.contains("常に許可"))
+        XCTAssertTrue(copy.lowercased().contains("macos が許可を求めます"))
     }
 }
 
@@ -705,7 +704,7 @@ final class AppPresenceTests: XCTestCase {
     /// Choosing this removes every visible way back into settings, so the
     /// option itself has to say where the door is.
     func testHidingExplainsHowToGetBack() {
-        XCTAssertTrue(AppPresence.hidden.explanation.contains("Applications"))
+        XCTAssertTrue(AppPresence.hidden.explanation.contains("アプリケーション"))
     }
 
     func testEveryModeIsNamedAndExplained() {
@@ -754,8 +753,8 @@ final class UpdateOutcomeTests: XCTestCase {
     /// nothing is wrong with their copy of the app.
     func testAnUnreachableFeedSaysSoWithoutBlamingTheApp() throws {
         let message = try XCTUnwrap(Updater.Outcome.unreachable.message)
-        XCTAssertTrue(message.contains("Couldn't reach"))
-        XCTAssertTrue(message.contains("nothing is wrong with this copy"))
+        XCTAssertTrue(message.contains("取得できません"))
+        XCTAssertTrue(message.contains("更新情報"))
         XCTAssertFalse(message.lowercased().contains("error occurred"))
     }
 
@@ -774,9 +773,12 @@ final class UpdateOutcomeTests: XCTestCase {
 
     /// The distinction the wording depends on: a feed that cannot be fetched is
     /// routine, anything else is reported as itself.
-    func testOnlyAFeedFailureCountsAsUnreachable() {
-        XCTAssertTrue(Updater.isUnreachable(Int(SUError.appcastError.rawValue)))
-        XCTAssertFalse(Updater.isUnreachable(Int(SUError.installationError.rawValue)))
+    func testJapaneseForkNeverStartsAutomaticUpdates() {
+        let updater = Updater()
+        updater.automatic = true
+        updater.start()
+        XCTAssertFalse(updater.automatic)
+        XCTAssertNil(updater.lastChecked)
     }
 }
 
@@ -860,8 +862,8 @@ final class KeychainRefusalTests: XCTestCase {
             fidelity: .official, status: .accessDenied, windows: []
         )
         let message = snapshot.statusMessage ?? ""
-        XCTAssertTrue(message.contains("refused"))
-        XCTAssertTrue(message.contains("Always Allow"))
+        XCTAssertTrue(message.contains("拒否"))
+        XCTAssertTrue(message.contains("常に許可"))
         XCTAssertFalse(message.contains("Sign in"), "it tells a signed-in user to sign in")
     }
 
@@ -956,7 +958,7 @@ final class KeychainProviderTests: XCTestCase {
 /// under `Claude Code-credentials` — six, on the machine this was found on.
 /// `kSecMatchLimitOne` gives no ordering guarantee across them, so the app
 /// could read an old, expired duplicate while a valid one sat beside it: the
-/// ring showed "Waiting for the first reading…" forever, with a working token
+/// ring showed "最初のデータを取得しています…" forever, with a working token
 /// one item away. `KeychainItem.winner` is the selection that replaced it —
 /// the query it is chosen from cannot run in a test, since there is no real
 /// keychain to point it at.

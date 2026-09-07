@@ -5,14 +5,14 @@ import Foundation
 enum ResetCopy {
     static func text(for resetsAt: Date, now: Date = Date(), calendar: Calendar = .current) -> String {
         let seconds = resetsAt.timeIntervalSince(now)
-        guard seconds > 0 else { return "Resetting…" }
+        guard seconds > 0 else { return "リセット中…" }
 
         // Rounding, not truncation, so 50m40s reads as 51 rather than 50. A
         // value that rounds up to 60 falls through to the absolute form, so
         // "Resets in 60 min" never appears.
         let minutes = Int((seconds / 60).rounded())
         if minutes < 60 {
-            return "Resets in \(max(1, minutes)) min"
+            return "あと\(max(1, minutes))分でリセット"
         }
 
         let formatter = formatter(for: calendar)
@@ -25,15 +25,15 @@ enum ResetCopy {
             // Day and month only, matching how the vendors write it. A time
             // that far out is noise: nobody plans around 3:55 PM in four weeks.
             formatter.setLocalizedDateFormatFromTemplate("MMM d")
-            return "Resets \(formatter.string(from: resetsAt))"
+            return "\(formatter.string(from: resetsAt))にリセット"
         }
 
         // A literal pattern rather than a localised template: the weekday and
         // AM/PM still come from the locale, but the separator stays a colon.
         // The template form yields "4.50 PM" in some regions, and both the
         // design frame and Claude's own usage panel write "4:50 PM".
-        formatter.dateFormat = "E h:mm a"
-        return "Resets \(formatter.string(from: resetsAt))"
+        formatter.dateFormat = "M月d日(E) H:mm"
+        return "\(formatter.string(from: resetsAt))にリセット"
     }
 
     /// A formatter that renders in the given calendar's own zone.
@@ -47,7 +47,7 @@ enum ResetCopy {
         let formatter = DateFormatter()
         formatter.calendar = calendar
         formatter.timeZone = calendar.timeZone
-        formatter.locale = .current
+        formatter.locale = Locale(identifier: "ja_JP")
         return formatter
     }
 

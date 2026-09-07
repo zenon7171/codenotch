@@ -45,7 +45,7 @@ enum CodexUsage {
             ))
         }
         guard !windows.isEmpty else {
-            throw UsageProviderError.nothingMetered("Codex reported no usage windows")
+            throw UsageProviderError.nothingMetered("Codex から使用量の期間情報が返されませんでした")
         }
         return windows
     }
@@ -59,16 +59,16 @@ enum CodexUsage {
     /// absent and the ring reporting nothing metered at all.
     static func label(windowSeconds: Double, fallback: String) -> String {
         guard windowSeconds > 0 else {
-            return fallback == "primary" ? "Current session" : "Longer window"
+            return fallback == "primary" ? "現在のセッション" : "長期の上限"
         }
         let minutes = windowSeconds / 60
-        if minutes < 60 { return "\(Int(minutes))m limit" }
-        if minutes < 60 * 24 { return "\(Int(minutes / 60))h limit" }
+        if minutes < 60 { return "\(Int(minutes))分の上限" }
+        if minutes < 60 * 24 { return "\(Int(minutes / 60))時間の上限" }
         let days = Int((minutes / (60 * 24)).rounded())
         switch days {
-        case 7:  return "Weekly limit"
-        case 30: return "Monthly limit"
-        default: return "\(days)d limit"
+        case 7:  return "週間の上限"
+        case 30: return "月間の上限"
+        default: return "\(days)日間の上限"
         }
     }
 }

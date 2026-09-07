@@ -283,7 +283,7 @@ private struct ProviderTooltip: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            TooltipHeader(title: "\(snapshot.displayName) Usage", note: readingAge) {
+            TooltipHeader(title: "\(snapshot.displayName) の使用量", note: readingAge) {
                 ProviderGlyphView(glyph: snapshot.glyph)
                     .foregroundStyle(Palette.textPrimary)
             }
@@ -346,9 +346,9 @@ private struct SessionRow: View {
 
     private var stateWord: String {
         switch session.state {
-        case .busy:    return "working"
-        case .waiting: return "waiting"
-        case .idle:    return "idle"
+        case .busy:    return "作業中"
+        case .waiting: return "応答待ち"
+        case .idle:    return "待機中"
         }
     }
 
@@ -413,7 +413,7 @@ private struct SessionList: View {
             }
 
             if hidden > 0 {
-                Text("and \(hidden) more")
+                Text("ほか \(hidden) 件")
                     .font(Typography.cardBody)
                     .foregroundStyle(Palette.textSecondary)
                     .padding(.top, NotchLayout.blockSpacing)

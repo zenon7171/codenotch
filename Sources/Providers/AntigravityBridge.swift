@@ -161,7 +161,7 @@ enum AntigravityBridge {
                     id: bucket.bucketId ?? group.displayName ?? "quota",
                     // The group names the models; the bucket only ever says
                     // "Weekly Limit Remaining", which is the same for both.
-                    label: group.displayName ?? bucket.displayName ?? "Usage",
+                    label: group.displayName ?? bucket.displayName ?? "使用量",
                     usedFraction: 1 - remaining,
                     resetsAt: bucket.resetTime.flatMap(AntigravityCredentials.parse)
                 )

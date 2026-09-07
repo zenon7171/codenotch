@@ -31,9 +31,9 @@ struct ActivitySummary: Equatable {
     /// One short word, for the tooltip.
     var label: String {
         switch state {
-        case .working: return "working"
-        case .waiting: return "waiting"
-        case .idle:    return "idle"
+        case .working: return "作業中"
+        case .waiting: return "応答待ち"
+        case .idle:    return "待機中"
         }
     }
 

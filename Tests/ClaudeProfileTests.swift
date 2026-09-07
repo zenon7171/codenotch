@@ -145,11 +145,11 @@ final class ClaudeProfileTests: XCTestCase {
             fidelity: .official, status: .needsAuth, windows: []
         )
         XCTAssertEqual(snapshot.statusMessage,
-                       "Sign in to Claude Code in ~/.claude-work to read your usage")
+                       "使用量を取得するには ~/.claude-work の Claude Code にサインインしてください")
     }
 
     /// Every profile's token is a keychain item, so every profile can be
-    /// refused and needs the "Allow access…" button.
+    /// refused and needs the "アクセスを許可…" button.
     func testEveryProfileUsesTheKeychain() {
         let summary = ProviderSummary(id: "claude-work", name: "Claude (work)", glyph: .claude,
                                       account: nil, signIn: .guidance("x"))
@@ -188,10 +188,9 @@ final class ClaudeProfileTests: XCTestCase {
         let home = URL(fileURLWithPath: "/Users/vinz")
         let store = UsageStore(
             providers: [
-                ClaudeOAuthProvider(profile: .default(home: home), archive: UsageArchive(defaults: defaults)),
-                ClaudeOAuthProvider(profile: ClaudeProfile(slug: "work",
-                                                           configDirectory: home.appendingPathComponent(".claude-work")),
-                                    archive: UsageArchive(defaults: defaults))
+                ProfileIdentityProvider(profile: .default(home: home)),
+                ProfileIdentityProvider(profile: ClaudeProfile(slug: "work",
+                                                           configDirectory: home.appendingPathComponent(".claude-work")))
             ],
             archive: UsageArchive(defaults: defaults)
         )
@@ -199,4 +198,13 @@ final class ClaudeProfileTests: XCTestCase {
         XCTAssertEqual(store.snapshots.map(\.displayName), ["Claude", "Claude (work)"])
         XCTAssertEqual(store.providerSummaries.map(\.name), ["Claude", "Claude (work)"])
     }
+}
+
+/// The store identity test must not read the developer's real login keychain.
+private struct ProfileIdentityProvider: UsageProvider {
+    let profile: ClaudeProfile
+    var id: String { profile.id }
+    var displayName: String { profile.displayName }
+    let glyph = ProviderGlyph.claude
+    func fetchSnapshot() async throws -> ProviderSnapshot { throw UsageProviderError.needsAuth }
 }

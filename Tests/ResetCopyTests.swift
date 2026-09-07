@@ -7,34 +7,34 @@ final class ResetCopyTests: XCTestCase {
     func testRelativeUnderAnHour() {
         XCTAssertEqual(
             ResetCopy.text(for: now.addingTimeInterval(51 * 60), now: now),
-            "Resets in 51 min"
+            "あと51分でリセット"
         )
     }
 
     func testRoundsToTheNearestMinute() {
         XCTAssertEqual(
             ResetCopy.text(for: now.addingTimeInterval(50 * 60 + 20), now: now),
-            "Resets in 50 min"
+            "あと50分でリセット"
         )
         XCTAssertEqual(
             ResetCopy.text(for: now.addingTimeInterval(50 * 60 + 40), now: now),
-            "Resets in 51 min"
+            "あと51分でリセット"
         )
     }
 
     /// The edge the whole rule turns on: at 60 minutes it stops counting down
-    /// and names a time instead, so "Resets in 60 min" never appears.
+    /// and names a time instead, so "あと60分でリセット" never appears.
     func testSwitchesToAbsoluteAtSixtyMinutes() {
         let atTheEdge = ResetCopy.text(for: now.addingTimeInterval(60 * 60), now: now)
-        XCTAssertFalse(atTheEdge.contains("min"))
-        XCTAssertTrue(atTheEdge.hasPrefix("Resets "))
+        XCTAssertFalse(atTheEdge.contains("分で"))
+        XCTAssertTrue(atTheEdge.hasSuffix("にリセット"))
 
         let justUnder = ResetCopy.text(for: now.addingTimeInterval(59 * 60 + 20), now: now)
-        XCTAssertEqual(justUnder, "Resets in 59 min")
+        XCTAssertEqual(justUnder, "あと59分でリセット")
 
         // 59m40s rounds to 60, which must not print as "60 min" either.
         let rounding = ResetCopy.text(for: now.addingTimeInterval(59 * 60 + 40), now: now)
-        XCTAssertFalse(rounding.contains("min"))
+        XCTAssertFalse(rounding.contains("分で"))
     }
 
     /// The frame writes "Resets Thu 12:00 AM"; a localised template gives
@@ -46,7 +46,7 @@ final class ResetCopyTests: XCTestCase {
     }
 
     func testPastResetsReadAsResetting() {
-        XCTAssertEqual(ResetCopy.text(for: now.addingTimeInterval(-5), now: now), "Resetting…")
+        XCTAssertEqual(ResetCopy.text(for: now.addingTimeInterval(-5), now: now), "リセット中…")
     }
 }
 
@@ -111,11 +111,11 @@ final class ResetCopyDistantDateTests: XCTestCase {
 /// either end. That is what made a correct reading look wrong.
 final class WindowSummaryTests: XCTestCase {
     private func window(_ fraction: Double) -> LimitWindow {
-        LimitWindow(id: "w", label: "Monthly limit", usedFraction: fraction)
+        LimitWindow(id: "w", label: "月間の上限", usedFraction: fraction)
     }
 
     func testItShowsBothEndsOfTheSameFigure() {
-        XCTAssertEqual(window(0.12).summary, "12% Used · 88% left")
+        XCTAssertEqual(window(0.12).summary, "12% 使用済み · 残り 88%")
     }
 
     /// The two halves must always agree, or the line contradicts itself.
@@ -130,12 +130,12 @@ final class WindowSummaryTests: XCTestCase {
 
     /// A limit can be reported past full; "-4% left" would be nonsense.
     func testAnOverspentLimitNeverGoesNegative() {
-        XCTAssertEqual(window(1.04).summary, "104% Used · 0% left")
+        XCTAssertEqual(window(1.04).summary, "104% 使用済み · 残り 0%")
     }
 
     /// Counts have no denominator, so they keep their own wording.
     func testCountsAreUntouched() {
-        XCTAssertEqual(LimitWindow(id: "w", label: "Requests", used: 8).summary, "8 used")
-        XCTAssertEqual(LimitWindow(id: "w", label: "Requests", remaining: 3).summary, "3 left")
+        XCTAssertEqual(LimitWindow(id: "w", label: "Requests", used: 8).summary, "8件使用済み")
+        XCTAssertEqual(LimitWindow(id: "w", label: "Requests", remaining: 3).summary, "残り3件")
     }
 }

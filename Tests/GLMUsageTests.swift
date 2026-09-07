@@ -28,10 +28,10 @@ final class GLMQuotaResponseTests: XCTestCase {
         let payload = try parse(live)
         XCTAssertEqual(payload.level, "pro")
         XCTAssertEqual(payload.windows.map(\.id), ["session", "weekly", "mcp"])
-        XCTAssertEqual(payload.windows[0].label, "Current session")
+        XCTAssertEqual(payload.windows[0].label, "現在のセッション")
         XCTAssertEqual(payload.windows[0].usedFraction ?? -1, 0.125, accuracy: 0.0001)
-        XCTAssertEqual(payload.windows[1].label, "Weekly")
-        XCTAssertEqual(payload.windows[2].label, "MCP (1 month)")
+        XCTAssertEqual(payload.windows[1].label, "週間")
+        XCTAssertEqual(payload.windows[2].label, "MCP（1か月）")
     }
 
     /// Milliseconds, not seconds — parsed as seconds the reset lands in
@@ -97,7 +97,7 @@ final class GLMQuotaResponseTests: XCTestCase {
         """
         let window = try XCTUnwrap(try parse(json).windows.first)
         XCTAssertEqual(window.id, "window-4x2")
-        XCTAssertEqual(window.label, "Usage")
+        XCTAssertEqual(window.label, "使用量")
     }
 
     /// Recorded from a live credit plan — the Lite tier meters credits rather

@@ -77,7 +77,7 @@ struct AntigravityActivity: Equatable {
     /// What the cell says. Deliberately a count with the limit's absence stated,
     /// rather than a number that looks like a percentage.
     var summary: String {
-        guard requestsToday > 0 else { return "no requests today" }
-        return "~\(requestsToday) request\(requestsToday == 1 ? "" : "s") today"
+        guard requestsToday > 0 else { return "本日のリクエストはありません" }
+        return "本日 約\(requestsToday)件のリクエスト"
     }
 }

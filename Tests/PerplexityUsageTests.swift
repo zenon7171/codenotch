@@ -23,7 +23,7 @@ final class PerplexityUsageTests: XCTestCase {
         XCTAssertEqual(w.map(\.id),
                        ["remaining_pro", "remaining_research",
                         "remaining_agentic_research", "remaining_labs", "free_queries"])
-        XCTAssertEqual(w[0].label, "Pro searches")
+        XCTAssertEqual(w[0].label, "Pro 検索")
         XCTAssertEqual(w[0].remaining, 2)
         XCTAssertEqual(w.last?.remaining, 10)
     }
@@ -39,18 +39,18 @@ final class PerplexityUsageTests: XCTestCase {
 
     func testSummaryReadsAsACount() throws {
         let w = try windows(recorded)
-        XCTAssertEqual(w[0].summary, "2 left")
-        XCTAssertEqual(w[1].summary, "0 left")
+        XCTAssertEqual(w[0].summary, "残り2件")
+        XCTAssertEqual(w[1].summary, "残り0件")
     }
 
     func testSingularReadsCorrectly() throws {
         let w = try windows(#"{"remaining_pro": 1}"#)
-        XCTAssertEqual(w[0].summary, "1 left")
+        XCTAssertEqual(w[0].summary, "残り1件")
     }
 
     /// Pro searches lead, because that is the quota people run out of.
     func testProSearchesAreTheHeadline() throws {
-        XCTAssertEqual(try windows(recorded).first?.label, "Pro searches")
+        XCTAssertEqual(try windows(recorded).first?.label, "Pro 検索")
     }
 
     /// Perplexity also reports vaguer kinds; a count we cannot trust is skipped

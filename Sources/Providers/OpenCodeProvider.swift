@@ -33,8 +33,7 @@ actor OpenCodeProvider: UsageProvider {
     }
 
     nonisolated var signInRoute: SignInRoute {
-        .guidance("Usage rides on the opencode-go key OpenCode stores on sign-in — "
-                  + "connect Go inside OpenCode (`opencode auth login`) and the notch reads it.")
+        .guidance("OpenCode で opencode auth login を実行して Go プランを連携すると、保存されたキーから使用量を取得します。")
     }
 
     nonisolated func forgetCachedCredential() {
@@ -114,7 +113,7 @@ actor OpenCodeProvider: UsageProvider {
         // A valid key that is not entitled to Go: readable, but metering
         // nothing — not an error, and it must not be shown as one.
         if status == 403 {
-            throw UsageProviderError.nothingMetered("No OpenCode Go subscription on this key")
+            throw UsageProviderError.nothingMetered("このキーに OpenCode Go の契約はありません")
         }
         if status == 429 {
             throw UsageProviderError.rateLimited(
