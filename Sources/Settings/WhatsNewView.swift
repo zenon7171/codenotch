@@ -33,6 +33,7 @@ struct WhatsNewView: View {
                 Image(nsImage: icon)
                     .resizable()
                     .frame(width: 60, height: 60)
+                    .accessibilityHidden(true)
                     .padding(.bottom, 8)
             }
             Text("Codenotch の新機能")

@@ -4,11 +4,13 @@ import SwiftUI
 /// The settings sheet, reached from the orb below the notch.
 struct SettingsView: View {
     @ObservedObject var preferences: Preferences
-    let providers: () -> [ProviderSummary]
+    let providers: () async -> [ProviderSummary]
     /// Re-read whenever the sheet comes forward. Switching account happens in
     /// another app, so the user is always coming *back* here to see it — which
     /// makes returning focus the exact moment the old value is wrong.
     @State private var accounts: [ProviderSummary] = []
+    @State private var isLoadingAccounts = true
+    @State private var accountRefreshID = 0
     /// Switching off has to reach the store's archive, not just the preference
     /// — see `UsageStore.signOut(providerID:)`.
     let signOut: (String) -> Void
@@ -30,6 +32,10 @@ struct SettingsView: View {
         // structure is visible all at once instead of navigated to.
         Form {
             Section("連携サービス") {
+                if isLoadingAccounts {
+                    ProgressView("アカウント情報を確認しています…")
+                        .font(.caption)
+                }
                 if needsSetup { setupNote }
                 ForEach(accounts) {
                     AccountRow(provider: $0, preferences: preferences,
@@ -136,10 +142,18 @@ struct SettingsView: View {
         // hunted for is not really a credit.
         .safeAreaInset(edge: .bottom, spacing: 0) { credit }
         .frame(width: SettingsView.width, height: SettingsView.height)
-        .onAppear { accounts = providers() }
+        .task(id: accountRefreshID) {
+            isLoadingAccounts = true
+            let updated = await providers()
+            guard !Task.isCancelled else { return }
+            accounts = updated
+            isLoadingAccounts = false
+        }
         .onReceive(NotificationCenter.default.publisher(
             for: NSWindow.didBecomeKeyNotification
-        )) { _ in accounts = providers() }
+        )) { _ in
+            if !isLoadingAccounts { accountRefreshID += 1 }
+        }
     }
 
     private var credit: some View {

@@ -105,7 +105,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 // A closure so the sheet re-reads accounts each time it comes
                 // forward; a snapshot here is what made a switched account keep
                 // showing the old address until the app restarted.
-                providers: { [weak store] in store?.providerSummaries ?? [] },
+                providers: { [weak store] in await store?.loadProviderSummaries() ?? [] },
                 updater: updater,
                 signOut: { [weak store] in store?.signOut(providerID: $0) },
                 signIn: { [weak store] in store?.signIn(providerID: $0) ?? false },
@@ -244,6 +244,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// otherwise nothing left to click — choosing Hide would be a one-way door.
     /// Launching the app again while it is already running lands here, so
     /// opening it from Applications or Spotlight reopens settings.
+    @MainActor
+    func openSettings() { settings?.show() }
+
     func applicationShouldHandleReopen(_ sender: NSApplication,
                                        hasVisibleWindows: Bool) -> Bool {
         settings?.show()

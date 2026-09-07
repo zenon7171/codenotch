@@ -57,11 +57,11 @@ enum CursorUsage {
 
         guard windows.isEmpty else { return windows }
 
-        let membership = (root["membershipType"] as? String) ?? "this"
+        let membership = (root["membershipType"] as? String) ?? "現在の"
         if (root["isUnlimited"] as? Bool) == true {
             throw UsageProviderError.nothingMetered("\(membership) プランは無制限のため、使用量の計測対象がありません")
         }
-        throw UsageProviderError.nothingMetered("The \(membership) plan has nothing for Cursor to meter yet")
+        throw UsageProviderError.nothingMetered("\(membership) プランには、まだ Cursor の計測対象の使用量がありません")
     }
 
     /// A dollar-denominated bucket, used where a plan states a real ceiling.

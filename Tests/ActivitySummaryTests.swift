@@ -223,7 +223,7 @@ final class CursorActivityTests: XCTestCase {
     func testBlockingActionsOutrankARunningTurn() throws {
         let s = try XCTUnwrap(session(header(blocking: true)))
         XCTAssertEqual(s.state, .waiting)
-        XCTAssertEqual(s.waitingFor, "needs your input")
+        XCTAssertEqual(s.waitingFor, "入力を待っています")
     }
 
     func testAPendingPlanAlsoCountsAsWaiting() throws {

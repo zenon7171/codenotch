@@ -183,7 +183,7 @@ final class CursorActivityMonitor: ObservableObject, AgentActivityMonitor {
             name: (head["name"] as? String) ?? "無題のチャット",
             detail: (head["subtitle"] as? String) ?? "Cursor",
             state: state,
-            waitingFor: blocked ? "needs your input" : nil,
+            waitingFor: blocked ? "入力を待っています" : nil,
             since: since
         )
     }

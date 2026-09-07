@@ -122,6 +122,22 @@ final class UsageStore: ObservableObject {
         }
     }
 
+    /// Keychain IPC may wait for a system prompt. Never perform it on the UI thread.
+    func loadProviderSummaries() async -> [ProviderSummary] {
+        let providers = self.providers
+        let disconnected = self.disconnected
+        let refusedAccess = self.refusedAccess
+        return await Task.detached(priority: .userInitiated) {
+            providers.map { provider in
+                ProviderSummary(id: provider.id, name: provider.displayName,
+                                glyph: provider.glyph,
+                                account: disconnected.contains(provider.id) ? nil : provider.account(),
+                                signIn: provider.signInRoute,
+                                wasRefusedAccess: refusedAccess.contains(provider.id))
+            }
+        }.value
+    }
+
     func start() {
         refreshNow()
 
@@ -425,7 +441,7 @@ final class UsageStore: ObservableObject {
         case UsageProviderError.badResponse(let code):
             return .error("HTTP \(code)")
         default:
-            return .error((error as NSError).localizedDescription)
+            return .error(JapaneseErrorCopy.text(for: error))
         }
     }
 

@@ -141,7 +141,7 @@ struct ClaudeProfile: Equatable, Hashable {
     /// Which tool the credential is borrowed from, said so that two Claude rows
     /// in Settings can be told apart.
     var sourceName: String {
-        slug == nil ? "Claude Code" : "Claude Code in \(displayPath)"
+        slug == nil ? "Claude Code" : "Claude Code（\(displayPath)）"
     }
 
     /// The command that signs this profile in, for the row that has no button.

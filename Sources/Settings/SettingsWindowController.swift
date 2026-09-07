@@ -13,7 +13,7 @@ final class SettingsWindowController {
     /// A closure, not a snapshot. Read once at launch, the account shown here
     /// went stale the moment someone switched account in Cursor — and stayed
     /// stale until the app was restarted.
-    private let providers: () -> [ProviderSummary]
+    private let providers: () async -> [ProviderSummary]
     private let signOut: (String) -> Void
     private let signIn: (String) -> Bool
     private let switchAccount: (String) -> Bool
@@ -21,7 +21,7 @@ final class SettingsWindowController {
     private let updater: Updater
 
     init(preferences: Preferences,
-         providers: @escaping () -> [ProviderSummary],
+         providers: @escaping () async -> [ProviderSummary],
          updater: Updater,
          signOut: @escaping (String) -> Void,
          signIn: @escaping (String) -> Bool,

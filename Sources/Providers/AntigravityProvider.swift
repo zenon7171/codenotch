@@ -59,7 +59,7 @@ actor AntigravityProvider: UsageProvider {
         guard let credentials = try? AntigravityCredentials.load() else { return nil }
         return ProviderAccount(
             label: nil,   // the token carries no address
-            plan: credentials.authMethod == "consumer" ? "Personal" : credentials.authMethod,
+            plan: credentials.authMethod == "consumer" ? "個人用" : credentials.authMethod,
             source: "Antigravity",
             manageURL: URL(string: "https://antigravity.google")
         )
